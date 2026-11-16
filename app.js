@@ -2,6 +2,7 @@ const $ = (id) => document.getElementById(id);
 const messages = $("messages");
 const input = $("messageInput");
 let recognition = null;
+const chatHistory = [];
 
 function addMessage(text, who) {
   const node = document.createElement("div");
@@ -26,12 +27,69 @@ function speak(text) {
   utterance.rate = 0.94; utterance.pitch = 1.08;
   window.speechSynthesis.speak(utterance);
 }
-function send(text) {
-  const clean = text.trim(); if (!clean) return;
-  addMessage(clean,"hubby"); input.value = "";
-  const reply = demoReply(clean);
-  setTimeout(() => { addMessage(reply,"wifey"); speak(reply); }, 450);
+
+async function send(text) {
+  const clean = text.trim();
+  if (!clean) return;
+
+  addMessage(clean, "hubby");
+  input.value = "";
+
+  chatHistory.push({
+    role: "user",
+    content: clean
+  });
+
+  try {
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        messages: chatHistory
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error("AI request failed");
+    }
+
+    const raw = await response.text();
+
+    const reply = raw
+      .split(/\r?\n/)
+      .filter(line => line.startsWith("data:"))
+      .map(line => {
+        try {
+          return JSON.parse(line.slice(5).trim()).response || "";
+        } catch {
+          return "";
+        }
+      })
+      .join("");
+
+    if (!reply) {
+      throw new Error("Empty AI response");
+    }
+
+    chatHistory.push({
+      role: "assistant",
+      content: reply
+    });
+
+    addMessage(reply, "wifey");
+    speak(reply);
+
+  } catch (error) {
+    console.error(error);
+    addMessage(
+      "Sorry, Mahal. I'm having trouble connecting right now.",
+      "wifey"
+    );
+  }
 }
+
 $("sendButton").addEventListener("click",()=>send(input.value));
 input.addEventListener("keydown",e=>{if(e.key==="Enter")send(input.value);});
 document.querySelectorAll(".tab").forEach(tab=>tab.addEventListener("click",()=>{
