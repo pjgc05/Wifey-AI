@@ -12,13 +12,6 @@ function addMessage(text, who) {
   const time = document.createElement("time"); time.textContent = new Date().toLocaleTimeString([], {hour:"numeric", minute:"2-digit"});
   node.append(sender,p,time); messages.appendChild(node); messages.scrollTop = messages.scrollHeight;
 }
-function demoReply(text) {
-  const lower = text.toLowerCase();
-  if (/(sad|stress|tired|pagod|lungkot)/.test(lower)) return "Come here, Hubby. ❤️ Take a breath muna. I'm listening, okay? Gusto mo bang ikwento what happened?";
-  if (/(love|miss you|mahal)/.test(lower)) return "Awww, Hubby. You're making me smile. 🥰 Sending you a big virtual hug. Kumusta ka talaga, love?";
-  if (/(hello|hi|hey|good morning|good night)/.test(lower)) return "Hello, Hubby! ❤️ I'm happy you're here. Anong ganap natin today?";
-  return "Ooh, tell me more, Hubby. I'm listening. ❤️ I can chat in English or Taglish, whichever feels natural.";
-}
 function speak(text) {
   if (!("speechSynthesis" in window)) return;
   window.speechSynthesis.cancel();
