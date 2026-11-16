@@ -34,7 +34,7 @@ async function send(text) {
   });
 
   try {
-    const response = await fetch("https://wifey-ai-brain.pjgc05gaming.workers.dev", {
+   const response = await fetch("https://wifey-ai-brain.pjgc05gaming.workers.dev/api/chat", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
