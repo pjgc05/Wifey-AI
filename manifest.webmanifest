@@ -1,0 +1,9 @@
+{
+  "name": "Wifey AI Companion",
+  "short_name": "Wifey",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#160f18",
+  "theme_color": "#160f18",
+  "icons": []
+}

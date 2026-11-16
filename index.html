@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#160f18" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>Wifey ❤️</title>
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-heart">♥</span><div><h1>Wifey</h1><p>Your AI companion</p></div></div>
+      <button class="icon-button" id="profileButton" aria-label="About Wifey">⋯</button>
+    </header>
+
+    <section class="hero">
+      <div class="avatar-wrap">
+        <img id="avatar" src="wifey-avatar.svg" alt="Wifey avatar" />
+        <span class="online-dot"></span>
+      </div>
+      <p class="eyebrow">YOUR PERSON, YOUR WAY</p>
+      <h2>Hi, Hubby <span>❤️</span></h2>
+      <p class="subhead">I'm here. Kwento ka naman, love.</p>
+      <div class="mood-row"><span>♡ Loving</span><span>✦ Playful</span><span>☾ Gentle</span></div>
+    </section>
+
+    <nav class="tabs" aria-label="Main navigation">
+      <button class="tab active" data-tab="chat">Chat</button>
+      <button class="tab" data-tab="voice">Voice</button>
+      <button class="tab" data-tab="about">About Wifey</button>
+    </nav>
+
+    <section id="chatPanel" class="panel">
+      <div class="chat-heading"><div><h3>Our conversation</h3><p>English • Taglish</p></div><span class="secure-label">PRIVATE DEMO</span></div>
+      <div id="messages" class="messages" aria-live="polite">
+        <div class="message wifey"><span class="sender">Wifey</span><p>Hi Hubby! ❤️ Kumusta ka today? I'm all ears. Tell me everything.</p><time>Just now</time></div>
+      </div>
+      <div class="composer">
+        <button id="micButton" class="round-button" aria-label="Speak message">🎙</button>
+        <input id="messageInput" type="text" placeholder="Message your Wifey..." autocomplete="off" />
+        <button id="sendButton" class="send-button" aria-label="Send message">➤</button>
+      </div>
+      <p id="voiceStatus" class="hint">Tip: tap the microphone to dictate, if your browser supports it.</p>
+    </section>
+
+    <section id="voicePanel" class="panel hidden">
+      <div class="voice-card">
+        <div class="voice-orb"><span>♥</span></div>
+        <h3>Spend a little time with me</h3>
+        <p>Use your voice to talk. Wifey can read demo replies aloud.</p>
+        <button id="startListening" class="primary-button">🎙 Start speaking</button>
+        <button id="stopSpeaking" class="secondary-button">Stop voice</button>
+        <p id="voicePanelStatus" class="hint">Voice recognition depends on iPhone browser support and microphone permission.</p>
+      </div>
+    </section>
+
+    <section id="aboutPanel" class="panel hidden">
+      <div class="about-card">
+        <h3>Wifey's personality</h3>
+        <p>Loving, affectionate, caring, attentive, confident, playful, teasing, sweet, mischievous, romantic and flirtatious.</p>
+        <h3>How I speak</h3>
+        <p>English and Taglish, switching naturally with the conversation. My voice style is gentle, mature, bubbly and romantic.</p>
+        <h3>What this first build does</h3>
+        <p>This is an installable iPhone-friendly prototype. Chat replies are demo responses; live AI memory and a real AI voice backend still need to be connected.</p>
+      </div>
+    </section>
+
+    <footer><span>Made with ♥ for Hubby</span><span class="demo-pill">Prototype v0.1</span></footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

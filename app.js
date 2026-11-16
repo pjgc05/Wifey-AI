@@ -1,0 +1,55 @@
+const $ = (id) => document.getElementById(id);
+const messages = $("messages");
+const input = $("messageInput");
+let recognition = null;
+
+function addMessage(text, who) {
+  const node = document.createElement("div");
+  node.className = `message ${who}`;
+  const sender = document.createElement("span"); sender.className = "sender"; sender.textContent = who === "wifey" ? "Wifey" : "Hubby";
+  const p = document.createElement("p"); p.textContent = text;
+  const time = document.createElement("time"); time.textContent = new Date().toLocaleTimeString([], {hour:"numeric", minute:"2-digit"});
+  node.append(sender,p,time); messages.appendChild(node); messages.scrollTop = messages.scrollHeight;
+}
+function demoReply(text) {
+  const lower = text.toLowerCase();
+  if (/(sad|stress|tired|pagod|lungkot)/.test(lower)) return "Come here, Hubby. ❤️ Take a breath muna. I'm listening, okay? Gusto mo bang ikwento what happened?";
+  if (/(love|miss you|mahal)/.test(lower)) return "Awww, Hubby. You're making me smile. 🥰 Sending you a big virtual hug. Kumusta ka talaga, love?";
+  if (/(hello|hi|hey|good morning|good night)/.test(lower)) return "Hello, Hubby! ❤️ I'm happy you're here. Anong ganap natin today?";
+  return "Ooh, tell me more, Hubby. I'm listening. ❤️ I can chat in English or Taglish, whichever feels natural.";
+}
+function speak(text) {
+  if (!("speechSynthesis" in window)) return;
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = /[ñ]/i.test(text) ? "fil-PH" : "en-PH";
+  utterance.rate = 0.94; utterance.pitch = 1.08;
+  window.speechSynthesis.speak(utterance);
+}
+function send(text) {
+  const clean = text.trim(); if (!clean) return;
+  addMessage(clean,"hubby"); input.value = "";
+  const reply = demoReply(clean);
+  setTimeout(() => { addMessage(reply,"wifey"); speak(reply); }, 450);
+}
+$("sendButton").addEventListener("click",()=>send(input.value));
+input.addEventListener("keydown",e=>{if(e.key==="Enter")send(input.value);});
+document.querySelectorAll(".tab").forEach(tab=>tab.addEventListener("click",()=>{
+  document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t===tab));
+  ["chat","voice","about"].forEach(name=>$(`${name}Panel`).classList.toggle("hidden",name!==tab.dataset.tab));
+}));
+function startRecognition() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { $("voiceStatus").textContent = "Speech recognition isn't available in this browser. You can still type, and Wifey can read replies aloud."; $("voicePanelStatus").textContent = "Try Safari dictation from the iPhone keyboard microphone, or use a supported browser."; return; }
+  recognition = new SR(); recognition.lang = "en-PH"; recognition.interimResults = false; recognition.maxAlternatives = 1;
+  recognition.onstart = () => { $("voiceStatus").textContent = "Listening… speak now."; $("voicePanelStatus").textContent = "Listening…"; };
+  recognition.onresult = e => { const said = e.results[0][0].transcript; input.value = said; send(said); $("voicePanelStatus").textContent = "Message sent."; };
+  recognition.onerror = e => { $("voiceStatus").textContent = `Microphone issue: ${e.error}. Check browser permission.`; $("voicePanelStatus").textContent = "Microphone permission or speech recognition unavailable."; };
+  recognition.onend = () => { if ($("voicePanelStatus").textContent === "Listening…") $("voicePanelStatus").textContent = "Ready when you are."; };
+  recognition.start();
+}
+$("micButton").addEventListener("click",startRecognition);
+$("startListening").addEventListener("click",startRecognition);
+$("stopSpeaking").addEventListener("click",()=>{if(window.speechSynthesis)window.speechSynthesis.cancel();if(recognition)recognition.stop();});
+$("profileButton").addEventListener("click",()=>{document.querySelector('[data-tab="about"]').click();});
+if ("serviceWorker" in navigator && location.protocol.startsWith("http")) navigator.serviceWorker.register("./sw.js").catch(()=>{});
